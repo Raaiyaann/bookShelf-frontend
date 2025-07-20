@@ -38,17 +38,16 @@ function loadDataFromStorage() {
 
 function savedData() {
   // untuk saveData pada local storage
-  if (isStorageExist) {
+  if (isStorageExist()) {
     const parse = JSON.stringify(books); // dijadikan fromat string json objek di array books
     localStorage.setItem(STORAGE_KEY, parse); // nilai tadi jadi nilai pada key STORAGE_KEY untuk di simpan pada local storage nanti
     document.dispatchEvent(new Event(SAVED_EVENT));
   }
 }
-
 function findBook(bookId) {
   // mencari objek buku berdasarkan id
   for (let book of books) {
-    if (bookId.id === bookId) {
+    if (book.id === bookId) {
       return book;
     }
   }
@@ -92,20 +91,61 @@ function addBookComplete(bookId) {
   savedData();
 }
 // mengembalikan state buku jadi belum dibaca
-function undoBookComplete(bookId){
-const bookTarget = findBook(bookId);
+function undoBookComplete(bookId) {
+  const bookTarget = findBook(bookId);
 
-if(bookTarget == null) return;
+  if (bookTarget == null) return;
 
-bookTarget.isComplete = false;
-document.dispatchEvent(new Event(RENDER_EVENT));
-savedData();
+  bookTarget.isComplete = false;
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  savedData();
 }
 
 // hapus data buku, hanya pada rak buku yang selesai dibaca
-function removeBookCompleted(bookId){
-    const bookTarget = findBookIndex(bookId);
+function removeBookCompleted(bookId) {
+  const bookTargetId = findBookIndex(bookId);
 
-    if(bookTarget.id == -1) return; // karena dicari berdasarkan index, maka dicek apakah -1 atau artinya tidak ada buku pada index 0 maka hentikan program
+  if (bookTargetId.id === -1) return; // karena dicari berdasarkan index, maka dicek apakah -1 atau artinya tidak ada buku pada index 0 maka hentikan program
 
+  books.splice(bookTargetId, 1);
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  savedData();
 }
+
+// fungsi untuk buat containernya saat datanya ditambahkan
+function makeBook(bookObject) {
+  const bookTitle = document.createElement("h2");
+  bookTitle.innerText = bookObject.title;
+
+  const bookAuthor = document.createElement("p");
+  bookAuthor.innerText = `Penulis: ${bookObject.author}`;
+
+  const bookYear = document.createElement("p");
+  bookYear.innerText = `Tahun: ${bookObject.year}`;
+
+  const container = document.createElement("div");
+  container.classList.add("book-item");
+  container.append(bookTitle, bookAuthor, bookYear); // ini untuk tambah textnya
+
+  return container;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const submitBookForm = document.getElementById("bookForm");
+  submitBookForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    addBook();
+    event.target.reset(); // supaya saat submit book, nilai di inputnya jadi ke reset ulang
+  });
+  document.addEventListener(RENDER_EVENT, function () {
+    const incompleteBookList = document.getElementById("incompleteBookList");
+    incompleteBookList.innerHTML = "";
+
+    for (const bookItem of books) {
+      const bookElement = makeBook(bookItem);
+      if (!bookItem.isComplete) {
+        incompleteBookList.append(bookElement);
+      }
+    }
+  });
+});
