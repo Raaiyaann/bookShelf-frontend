@@ -114,19 +114,53 @@ function removeBookCompleted(bookId) {
 
 // fungsi untuk buat containernya saat datanya ditambahkan
 function makeBook(bookObject) {
-  const bookTitle = document.createElement("h2");
+  const bookTitle = document.createElement("h3");
   bookTitle.innerText = bookObject.title;
+  bookTitle.setAttribute("data-testid", " bookItemTitle");
 
   const bookAuthor = document.createElement("p");
   bookAuthor.innerText = `Penulis: ${bookObject.author}`;
+  bookAuthor.setAttribute("data-testid", "bookItemAuthor");
 
   const bookYear = document.createElement("p");
   bookYear.innerText = `Tahun: ${bookObject.year}`;
+  bookYear.setAttribute("data-testid", "bookItemYear");
+
+  const buttonContainer = document.createElement("div");
+  buttonContainer.classList.add("container-button");
 
   const container = document.createElement("div");
   container.classList.add("book-item");
   container.append(bookTitle, bookAuthor, bookYear); // ini untuk tambah textnya
 
+  if (bookObject.isComplete) {
+    const deleteButton = document.createElement("button");
+    deleteButton.innerText = `Hapus Buku`;
+    deleteButton.setAttribute("data-testid", "bookItemDeleteButton");
+
+    deleteButton.addEventListener("click", function () {
+      removeBookCompleted(bookObject.id);
+    });
+    buttonContainer.append(deleteButton);
+  } else {
+    const finishButton = document.createElement("button");
+    finishButton.innerText = `Selesai Dibaca`;
+    finishButton.setAttribute("data-testid", "bookItemIsCompleteButton");
+
+    finishButton.addEventListener("click", function () {
+      addBookComplete(bookObject.id);
+    });
+
+    const editButton = document.createElement("button");
+    editButton.innerText = `Edit Buku`;
+    editButton.setAttribute("data-testid", "bookItemEditButton");
+
+    editButton.addEventListener("click", function () {
+      // ---> belum ada, nanti dibuat <---
+    });
+    buttonContainer.append(finishButton, editButton); // bungkus dulu ke dalam div button-container
+  }
+  container.append(buttonContainer);
   return container;
 }
 
@@ -141,10 +175,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const incompleteBookList = document.getElementById("incompleteBookList");
     incompleteBookList.innerHTML = "";
 
+    const completeBookList = document.getElementById("completeBookList");
+    completeBookList.innerHTML = "";
+
     for (const bookItem of books) {
-      const bookElement = makeBook(bookItem);
+      const bookElement = makeBook(bookItem); // fungsi untuk buat struktur htmlnya
       if (!bookItem.isComplete) {
         incompleteBookList.append(bookElement);
+      } else {
+        completeBookList.append(bookElement);
       }
     }
   });

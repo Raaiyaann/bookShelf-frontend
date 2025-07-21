@@ -198,7 +198,7 @@ button[type="submit"]:active {
   display: flex;
   gap: 1.5rem;
   padding:2rem 0rem 0rem 0rem;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 [data-testid="bookItemIsCompleteButton"] {
@@ -240,10 +240,10 @@ button[type="submit"]:active {
   box-shadow: 0 3px 10px rgba(255, 193, 7, 0.3);
 }
 
-/* Empty State */
+/* rak nya saat kosong */
 [data-testid="incompleteBookList"]:empty::after,
 [data-testid="completeBookList"]:empty::after {
-  content: "Tidak ada buku dalam kategori ini";
+  content: "Tidak ada buku dalam Rak ini";
   display: block;
   text-align: center;
   color: #6c757d;
@@ -254,7 +254,7 @@ button[type="submit"]:active {
   border: 2px dashed #dee2e6;
 }
 
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 768px) {
   header h1 {
     font-size: 2rem;
