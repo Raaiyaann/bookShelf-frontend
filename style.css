@@ -140,15 +140,11 @@ button[type="submit"]:active {
 
 /* Search Form Specific Styles */
 .cari-buku form {
-  flex-direction: row;
-  align-items: end;
+  justify-content: center;
+  display: flex;
+  max-width:400px;
   gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.cari-buku form > div {
-  flex: 1;
-  min-width: 200px;
+  margin: 0rem 0rem 0rem 25rem;
 }
 
 .cari-buku button {
