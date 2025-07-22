@@ -67,7 +67,6 @@ function searchBook() {
     .getElementById("searchBookTitle")
     .value.toLowerCase();
   const bookList = books;
-  console.log(bookList);
   const foundBook = bookList.find(
     (book) => book.title.toLowerCase() === titleBook
   );
@@ -83,7 +82,7 @@ function searchBook() {
 function addBook() {
   const titleBook = document.getElementById("bookFormTitle").value;
   const authorBook = document.getElementById("bookFormAuthor").value;
-  const yearBook = document.getElementById("bookFormYear").value;
+  const yearBook = Number(document.getElementById("bookFormYear").value);
 
   const generateID = generateId();
   const bookObject = generateBookObject(
@@ -133,7 +132,7 @@ function removeBookCompleted(bookId) {
 function makeBook(bookObject) {
   const bookTitle = document.createElement("h3");
   bookTitle.innerText = bookObject.title;
-  bookTitle.setAttribute("data-testid", " bookItemTitle");
+  bookTitle.setAttribute("data-testid", "bookItemTitle");
 
   const bookAuthor = document.createElement("p");
   bookAuthor.innerText = `Penulis: ${bookObject.author}`;
@@ -231,7 +230,4 @@ document.addEventListener("DOMContentLoaded", function () {
   if (isStorageExist()) {
     loadDataFromStorage();
   }
-  document.addEventListener(SAVED_EVENT, function () {
-    console.log(localStorage.getItem(STORAGE_KEY));
-  });
 });
